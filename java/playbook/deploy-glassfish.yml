@@ -1,0 +1,5 @@
+---
+  - hosts: java
+    become: true
+    roles:
+      - roles/deploy-glassfish

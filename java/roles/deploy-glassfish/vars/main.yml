@@ -1,0 +1,5 @@
+---
+pl_tmp_pass: /tmp/glassfish_password_file
+#pl_file_path: /mnt1/domains/sprDomain/sprDomain/docroot
+#pl_instance_port: 8080
+#pl_https_port: 8443

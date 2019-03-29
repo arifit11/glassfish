@@ -1,0 +1,1 @@
+bin/asadmin deploy --port 5000 --host java --property implicitCdiEnabled=false /root/glassfish4/TestApi.war

@@ -1,0 +1,13 @@
+---
+# tasks file for deploy-glassfish
+
+- name: Copy War file to server
+  copy:
+    src: /Users/arifkhan/workspace/java/files/TestApi.war
+    dest: /tmp
+
+- name: copy temp password file
+  copy: src=password.file dest={{pl_tmp_pass}}
+
+- name: Deploy war file to glassfish mydomain
+  command: /root/glassfish4/glassfish/bin/asadmin deploy --port 5000 --host java --property implicitCdiEnabled=false --user admin --passwordfile {{pl_tmp_pass}} /root/glassfish4/TestApi.war

@@ -1,0 +1,36 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com
+  ssh_pub_key = File.readlines("/Users/arifkhan/.ssh/id_rsa.pub").first.strip
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://atlas.hashicorp.com/search.
+  # Java configuration
+  config.vm.define "java" do |java|
+    java.vm.box = "centos/7"
+    java.vm.network "private_network", ip: "192.168.33.33"
+    java.vm.network "public_network", bridge: "en0: Wi-Fi (AirPort)"
+    #java.ssh.username = "vagrant"
+    #java.ssh.password = "vagrant"
+    config.vm.provider "virtualbox" do |java|
+      java.memory = 1024
+      java.cpus = 1
+      java.name = "vb-java"
+    end
+    #config.vm.provision "shell", inline: <<-SHELL
+    config.vm.provision 'shell', inline: 'mkdir -p /root/.ssh'
+    config.vm.provision 'shell', inline: "echo #{ssh_pub_key} > /root/.ssh/authorized_keys"
+    config.vm.provision 'shell', inline: 'chmod 600 /root/.ssh/authorized_keys'
+    config.vm.provision 'shell', inline: 'chmod 700 /root/.ssh'
+    config.vm.provision 'shell', inline: 'hostnamectl set-hostname java'
+     #SHELL
+  end
+end

@@ -1,0 +1,52 @@
+---
+# tasks file for glassfish
+
+- name: Install basic software
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java-1.8.0-openjdk-devel
+    - java-1.8.0-openjdk
+    - curl
+    - wget
+    - unzip
+
+
+- name: add group "glassfish"
+  group: name=glassfish
+
+- name: add user "glassfish"
+  user: name=glassfish group=glassfish home=/usr/share/glassfish createhome=no
+  become: True
+  become_method: sudo
+
+- name: Creates /glassfish directory
+  file:
+    path: /glassfish
+    state: directory
+
+#- name: Download glassfish
+  #get_url: url=http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip dest=/glassfish/glassfish-4.1.zip
+
+- name: Extract archive
+  unarchive:
+    src: http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+    dest: /glassfish/
+    remote_src: yes
+
+- name: Symlink install directory
+  file: src=/glassfish/glassfish-4.1.zip path=/usr/share/glassfish state=link
+
+- name: Change ownership of glassfish installation
+  file: path=/usr/share/glassfish/ owner=glassfish group=glassfish state=directory recurse=yes
+
+
+- name: Install glassfish systemd script
+  copy: src=glassfish.service dest=/etc/systemd/system/glassfish.service mode=0700
+
+- name: Reload demon
+  command: systemctl daemon-reload
+
+- name: Start glassfish
+  service: name=glassfish state=started enabled=yes

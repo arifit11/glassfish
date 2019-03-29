@@ -1,0 +1,15 @@
+---
+ - hosts: java
+   become: true
+   tasks:
+     - name : create war file out of .jar
+       command : jar -cvf /root/TestApi.war /root/TestApi.zip
+
+     - name : stop tomcat server
+       service: name=tomcat state=stopped
+
+     - name : Copy the WAR file you have just created to CATALINA_HOME/webapps
+       command: cp /root/TestApi.war /opt/apache-tomcat-8.5.9/webapps/
+
+     - name : stop tomcat server
+       shell: service tomcat start
